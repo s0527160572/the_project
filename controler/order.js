@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { orderModel, orderValidatorForAdd } from "../models/order.js";
-
+import { productModel } from "../models/product.js";
 const getAllorder = async (req, res) => {
   try {
     let allorder = await orderModel.find({});
@@ -54,6 +54,11 @@ const addorder = async (req, res) => {
     return res.status(404).send("Error: Address is a mandatory field");
 
   try {
+    for(let i=0;i<products.length;i++){
+    let product= await productModel.findOne({ name:products[i] });
+    if(!product)
+    res.status(404).send("No product was found with such a name ");
+  }
 
     let sameorder = await orderModel.find({ address });
     if (sameorder.length > 0)
